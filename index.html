@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信卡片分享</title>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script>
+        // 获取签名信息的函数（示例）
+        function getSignatureInfo() {
+            // 实际使用时，您需要从您的服务器获取签名信息
+            // 这里是示例数据
+            return {
+                appId: 'wxb79bfcad911bb659',
+                timestamp: Date.now() / 1000 | 0,
+                nonceStr: 'random_string',
+                signature: 'signature_here',
+                url: 'https://free.wmhua.cn/2025/06/01/683c571f7f6c7.jpg' // 当前网页链接
+            };
+        }
+
+        // 页面加载完成后执行
+        window.onload = function() {
+            // 获取签名信息
+            var signatureInfo = getSignatureInfo();
+
+            // 调用微信JS接口
+            wx.config({
+                debug: false,
+                appId: signatureInfo.appId,
+                timestamp: signatureInfo.timestamp,
+                nonceStr: signatureInfo.nonceStr,
+                signature: signatureInfo.signature,
+                jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData']
+            });
+
+            // 微信JS接口加载完成后的回调函数
+            wx.ready(function() {
+                // 自定义分享给朋友的卡片内容
+                wx.updateAppMessageShareData({
+                    title: '卡片标题',
+                    desc: '卡片描述',
+                    img_url: 'https://img.picui.cn/free/2025/06/01/683c5500aca4d.jpg',
+                    link: signatureInfo.url,
+                    success: function(res) {
+                        console.log('分享给朋友配置成功');
+                    },
+                    fail: function(res) {
+                        console.log('分享给朋友配置失败', res);
+                    }
+                });
+
+                // 自定义分享到朋友圈的卡片内容
+                wx.updateTimelineShareData({
+                    title: '卡片标题',
+                    img_url: 'https://img.picui.cn/free/2025/06/01/683c5500aca4d.jpg',
+                    link: signatureInfo.url,
+                    success: function(res) {
+                        console.log('分享到朋友圈配置成功');
+                    },
+                    fail: function(res) {
+                        console.log('分享到朋友圈配置失败', res);
+                    }
+                });
+            });
+
+            // 错误处理函数
+            wx.error(function(res) {
+                console.log('微信JS接口配置失败', res);
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>微信卡片分享示例</h1>
+    <p>请使用微信浏览器打开此页面，并尝试分享到朋友圈或朋友。</p>
+</body>
+</html>
